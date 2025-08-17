@@ -2,10 +2,6 @@
 ---
 <div align="center">
 
-**Alpha Group (JCDS 0512 (SBY))**  
-
-Dibimbing Oleh:  
-[Bayu Prasetya](https://www.linkedin.com/in/bayu-dwi-prasetya/)  
 Disusun Oleh:  
 <a href="https://www.linkedin.com/in/muhammad-khisanul-fakhrudin-akbar/">Muhammad Khisanul Fakhrudin Akbar</a> | <a href="https://www.linkedin.com/in/cindy-handoko-tantowibowo-55a2751a7/">Cindy Handoko Tantowibowo</a>
 
@@ -51,26 +47,24 @@ Semakin tinggi precision, semakin tepat sasaran strategi marketing, karena hanya
 
 ## 5. Conclusions
 
-1. **Profil Nasabah Tertentu Menunjukkan Potensi Konversi Lebih Tinggi**   
-
+1. **Profil Nasabah Tertentu Menunjukkan Potensi Konversi Lebih Tinggi**  
     Nasabah berusia 25–34 tahun, berpendidikan tinggi, tidak memiliki pinjaman pribadi, dan berstatus single merupakan segmen paling potensial. Selain itu, pensiunan dengan stabilitas finansial juga menunjukkan conversion rate yang tinggi meski jumlahnya kecil.
 
-2. **Pengalaman Kampanye Sebelumnya dan Media Komunikasi Berperan Kunci**  
+2. **Media komunikasi berpengaruh besar pada keberhasilan kampanye**
+    Nasabah lebih responsif jika dihubungi lewat ponsel pribadi dibanding telepon rumah, karena sifatnya lebih personal dan relevan. Kontak melalui telepon rumah justru menurunkan respon positif sekitar 56%, sehingga channel ini kurang efektif untuk dijadikan pilihan utama.
 
-    Nasabah yang pernah berhasil dikonversi dalam kampanye sebelumnya serta dihubungi melalui ponsel pribadi memiliki kemungkinan jauh lebih tinggi untuk merespons kembali. Sementara itu, penggunaan telepon rumah dan kontak berlebihan justru menurunkan tingkat keberhasilan.
+3. **Riwayat kontak menentukan peluang konversi.**  
+    Nasabah yang pernah dihubungi sebelumnya memiliki kemungkinan merespons positif sekitar tiga kali lebih besar dibandingkan yang belum pernah dihubungi. Mereka yang sebelumnya berhasil dikonversi juga berpeluang hampir dua kali lebih tinggi dibandingkan yang gagal, sementara nasabah yang belum pernah dihubungi menunjukkan potensi respons yang lebih baik daripada yang gagal sehingga layak menjadi target baru. Sebaliknya, nasabah dengan riwayat kegagalan konversi cenderung paling sulit untuk ditindaklanjuti.
 
-3. **Kondisi Ekonomi Mempengaruhi Respons Nasabah terhadap Kampanye**  
+4. **Kondisi Ekonomi Mempengaruhi Respons Nasabah terhadap Kampanye**  
+    Ketika kondisi pasar tenaga kerja memburuk, misalnya pertumbuhan kerja negatif dan jumlah tenaga kerja menurun nasabah justru lebih tertarik pada deposito karena dianggap lebih aman. Sebaliknya, saat jumlah tenaga kerja meningkat, minat terhadap deposito cenderung menurun. Hal ini menunjukkan bahwa ketidakpastian ekonomi mendorong nasabah memilih produk keuangan yang lebih stabil seperti deposito.
 
-    Data menunjukkan bahwa minat terhadap produk deposito meningkat ketika kondisi ekonomi melemah, misalnya saat tingkat pengangguran tinggi atau suku bunga rendah. Hal ini menunjukkan bahwa nasabah cenderung lebih tertarik pada produk keuangan yang aman di masa ketidakpastian, sehingga memahami konteks makroekonomi penting untuk merancang waktu kampanye yang lebih strategis.
-
-4. **Model Machine Learning Mampu Meningkatkan Efisiensi Telemarketing**  
-
-    Model logistic regression yang dikembangkan mampu meningkatkan conversion rate menjadi 74.82%, jauh melampaui rata-rata historis yang berfluktuasi antara 6,43% hingga 50%. Ini menunjukkan bahwa pemanfaatan data historis dengan pendekatan prediktif dapat meningkatkan efektivitas secara konsisten.
+5. **Model Machine Learning Mampu Meningkatkan Efisiensi Telemarketing**  
+    Model logistic regression yang dikembangkan mampu meningkatkan conversion rate menjadi 80%, jauh melampaui rata-rata historis sebesar 26%. Ini menunjukkan bahwa pemanfaatan data historis dengan pendekatan prediktif dapat meningkatkan efektivitas secara konsisten.
 
 ## 6. Recommendations
 
-1. **Fokuskan Target ke Profil Nasabah Potensial**  
-
+1. **Fokuskan Target ke Profil Nasabah Potensial**
    Buat segmentasi kampanye berdasarkan karakteristik nasabah paling responsif, yaitu:
 
    * Usia 25–34 tahun
@@ -79,21 +73,17 @@ Semakin tinggi precision, semakin tepat sasaran strategi marketing, karena hanya
    * Tidak memiliki pinjaman pribadi  
     Prioritaskan segmen ini dalam daftar panggilan untuk meningkatkan efisiensi dan peluang konversi.
 
-2. **Gunakan Media Komunikasi yang Lebih Personal**   
+2. **Optimalkan Channel Komunikasi yang Efektif**  
+   Gunakan ponsel pribadi sebagai media utama untuk telemarketing karena terbukti lebih efektif dan personal. Kurangi penggunaan telepon kantor/rumah karena menurunkan peluang konversi secara signifikan.
 
-   Hindari penggunaan telepon rumah. Lakukan semua kampanye melalui **ponsel pribadi**, karena terbukti memiliki tingkat respons yang lebih tinggi. Sesuaikan juga waktu kontak pada pertengahan hari kerja (hindari hari Senin).
+3. **Kelola Riwayat Kontak untuk Strategi Follow-up**  
+   Prioritaskan follow-up kepada nasabah yang pernah dihubungi pada periode sebelumnya, terutama yang sudah pernah berhasil dikonversi. Hindari terlalu banyak upaya pada nasabah dengan riwayat kegagalan berulang, karena efektivitasnya rendah.
 
-3. **Batasi Frekuensi Kontak Maksimal 3 Kali per Nasabah** 
+4. **Optimalkan Pesan Kampanye Sesuai Tren Ekonomi untuk Tingkatkan Konversi**  
+   Sesuaikan isi pesan kampanye dengan kondisi ekonomi terkini. Saat situasi ekonomi melemah, sorot manfaat keamanan, stabilitas, dan jaminan hasil dari produk deposito. Sebaliknya, ketika ekonomi mulai pulih, arahkan pesan pada peluang pertumbuhan dana dan fleksibilitas produk. Buat skrip telemarketing yang adaptif dan siapkan materi kampanye dinamis sesuai tren makroekonomi yang sedang berlangsung.
 
-   Berdasarkan data, melakukan **1–3 kali kontak** menghasilkan peluang terbaik untuk konversi. Jika nasabah belum merespons setelah 3 kali, lebih baik dialihkan ke retargeting di masa depan agar tidak membuang sumber daya.
-
-4. **Lakukan Retargeting Berdasarkan Riwayat Interaksi Positif**  
-
-   Identifikasi nasabah yang sebelumnya pernah merespons positif terhadap kampanye. Mereka memiliki kemungkinan yang jauh lebih besar untuk kembali tertarik, dan harus menjadi prioritas dalam kampanye berikutnya.
-
-5. **Optimalkan Pesan Kampanye Sesuai Tren Ekonomi untuk Tingkatkan Konversi**  
-
-   Sesuaikan isi pesan kampanye dengan kondisi ekonomi terkini. Saat situasi ekonomi melemah (misalnya, naiknya pengangguran atau turunnya kepercayaan konsumen), sorot manfaat keamanan, stabilitas, dan jaminan hasil dari produk deposito. Sebaliknya, ketika ekonomi mulai pulih, arahkan pesan pada peluang pertumbuhan dana dan fleksibilitas produk. Buat skrip telemarketing yang adaptif dan siapkan materi kampanye dinamis sesuai tren makroekonomi yang sedang berlangsung.
+5. **Integrasikan Model Prediktif dalam Proses Telemarketing**  
+   Gunakan model yang telah dibangun (logistic regression) untuk mengidentifikasi calon nasabah dengan probabilitas konversi tertinggi. Hal ini dapat meningkatkan efisiensi, mengurangi biaya, dan memperbesar peluang mencapai conversion rate di atas rata-rata historis.
 
 ## 7. Data Sources
 
@@ -119,6 +109,7 @@ Kolom-kolom terbagi dalam 5 kelompok:
 │   └── bank_marketing_clean.csv
 │
 ├── model          
+│   ├── logreg_for_marketing_2.sav (80% Precision)
 │   └── logreg_for_marketing.sav
 │
 ├── notebook          
@@ -147,7 +138,7 @@ Dashboard [Tableau Bank Marketing Campaign](https://public.tableau.com/app/profi
 ![Overview Pages](report/tableau_3.jpg)
 
 ## 10. Streamlit App Overview
-Aplikasi Bank Marketing Campaign Customer Predictor dikembangkan menggunakan Streamlit sebagai antarmuka interaktif untuk mendemonstrasikan hasil model machine learning dalam memprediksi minat nasabah terhadap produk deposito berjangka. Aplikasi ini memungkinkan pengguna untuk melakukan input data secara langsung melalui panel samping (*sidebar*) maupun melalui unggahan file CSV dalam jumlah banyak (*batch prediction*). Setelah data dimasukkan, aplikasi akan menampilkan hasil prediksi beserta probabilitasnya dalam bentuk yang mudah dipahami. 
+[Aplikasi Bank Marketing Campaign Customer Predictor](https://finpro-bank-marketing.streamlit.app/) dikembangkan menggunakan Streamlit sebagai antarmuka interaktif untuk mendemonstrasikan hasil model machine learning dalam memprediksi minat nasabah terhadap produk deposito berjangka. Aplikasi ini memungkinkan pengguna untuk melakukan input data secara langsung melalui panel samping (*sidebar*) maupun melalui unggahan file CSV dalam jumlah banyak (*batch prediction*). Setelah data dimasukkan, aplikasi akan menampilkan hasil prediksi dalam bentuk yang mudah dipahami. 
 
 * Streamlit Pages
 ![Overview Pages](report/streamlit_1.jpg)
@@ -162,8 +153,8 @@ Aplikasi Bank Marketing Campaign Customer Predictor dikembangkan menggunakan Str
 
 * Installation:
 ```
-git clone https://github.com/PurwadhikaDev/AlphaGroup_JC_DS_FT_SBY_05_FinalProject
-cd AlphaGroup_JC_DS_FT_SBY_05_FinalProject
+git clone https://github.com/Meowstronot/Finpro_Streamlit
+cd Finpro_Streamlit
 pip install -r requirements.txt
 ```
 * Run Analysis:

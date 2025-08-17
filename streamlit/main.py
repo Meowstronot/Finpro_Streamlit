@@ -3,23 +3,23 @@ import pandas as pd
 import numpy as np
 import streamlit as st
 import pickle
-import os, io
+import os, io, time
 
 from sklearn.base import BaseEstimator, TransformerMixin
 from typing import Literal
 from function import ModusImputer,ModusTwoGroups
+
 lokasi_file = Path(__file__).resolve()
 # print("Lokasi file:", lokasi_file)
-
 lokasi_folder_utama = lokasi_file.parents[1]
 # print("Direktori folder utama:", lokasi_folder_utama)
-
-path_model = lokasi_folder_utama / 'model' / 'logreg_for_marketing.sav'
+path_model = lokasi_folder_utama / 'model' / 'logreg_for_marketing_2.sav'
 # print("Path lengkap ke model:", path_model)
-
 path_data_clean = lokasi_folder_utama / 'data' / 'bank_marketing_clean.csv'
 # print("Path lengkap ke model:", path_data_clean)
 
+with open(path_model, "rb") as f:
+    model = pickle.load(f)
 
 
 st.set_page_config(
@@ -29,79 +29,24 @@ st.set_page_config(
     page_icon="📈",
 )
 
-st.title("Bank Marketing Campaign Customer Predictor")
-
-st.header("Dataset Overview")
+st.title("Bank Marketing Campaign Customer Predictor App")
 st.markdown("""
-Dataset [Bank Marketing Campaigns Dataset](https://www.kaggle.com/datasets/volodymyrgavrysh/bank-marketing-campaigns-dataset/data) 
-merupakan kumpulan data hasil kampanye telemarketing oleh sebuah bank di Portugal untuk mempromosikan produk deposito berjangka (term deposit) selama 10 bulan. 
-Dataset ini merekam berbagai informasi demografis dan finansial nasabah, termasuk data riwayat interaksi selama kampanye pemasaran seperti jumlah kontak, hasil kampanye sebelumnya, 
-serta metode dan waktu komunikasi. Selain itu, dataset ini juga mencakup beberapa indikator ekonomi makro seperti indeks harga konsumen, indeks kepercayaan konsumen, dan suku bunga acuan.
-""")
+---
+Aplikasi ini memanfaatkan machine learning untuk memprediksi kemungkinan konversi nasabah terhadap produk deposito berjangka, 
+sehingga tim pemasaran dapat menargetkan nasabah yang paling potensial, meningkatkan efisiensi kampanye, serta mengoptimalkan penggunaan sumber daya.
+""", unsafe_allow_html=True)
 
-st.header("Main Objective")
 st.markdown("""
-Memprediksi apakah seorang nasabah kemungkinan besar akan menerima atau menolak penawaran sebelum dihubungi secara langsung. Hasil prediksi ini dinyatakan dalam dua kategori, yaitu:
+Model: <br>
+**Logistic Regression** <br>
+*Conversion Rate (Precision)* : :green[80%],&nbsp; *ROAS* : :green[55x]
 
-* "yes": nasabah bersedia dan akhirnya membuka deposito berjangka,
-* "no": nasabah tidak tertarik atau menolak penawaran yang diberikan.
-""")
+""", unsafe_allow_html=True)
 
-st.header("Features")
-
-st.subheader("Customer Profile")
-st.markdown("""
-* **Age (`age`)**: Umur nasabah
-* **Job (`job`)**: Jenis pekerjaan nasabah
-* **Marital Status (`marital`)**: Status pernikahan nasabah (menikah, single, bercerai)
-* **Education (`education`)**: Tingkat pendidikan nasabah
-* **Has Housing Loan? (`housing`)**: Apakah nasabah memiliki pinjaman rumah (yes/no)
-* **Has Personal Loan? (`loan`)**: Apakah nasabah memiliki pinjaman pribadi (yes/no)
-""")
-
-st.subheader("Campaign Information")
-st.markdown("""
-* **Campaign (Contact Count) (`campaign`)**: Jumlah kontak yang dilakukan selama kampanye ini
-* **Previous Contacts (`previous`)**: Jumlah kontak pada kampanye sebelumnya
-* **Previously Contacted (`previous_contacted`)**: Apakah nasabah pernah dihubungi sebelumnya (0 = belum, 1 = sudah)
-* **Contact Communication Type (`contact`)**: Media kontak terakhir (telepon rumah atau ponsel)
-* **Last Contact Month (`month`)**: Bulan saat kontak terakhir dilakukan
-* **Day of Week Contacted (`day_of_week`)**: Hari dalam seminggu saat kontak terakhir
-* **Previous Campaign Outcome (`poutcome`)**: Hasil kampanye sebelumnya (nonexistent, failure, success)
-""")
-
-st.subheader("Additional Information")
-st.markdown("""
-* **Consumer Price Index (`cons.price.idx`)**: Indeks harga konsumen, indikator inflasi
-* **Consumer Confidence Index (`cons.conf.idx`)**: Indeks kepercayaan konsumen terhadap kondisi ekonomi
-* **Number of Employed (`nr.employed`)**: Rata-rata jumlah tenaga kerja, indikator kondisi pasar kerja
-""")
+tab_single, tab_batch = st.tabs(["Single-Predict", "Multi-Predict"])
 
 
-#__________________________________________________________________ side bar __________________________________
-
-example_csv = """age,campaign,previous,cons.price.idx,cons.conf.idx,nr.employed,previous_contacted,job,marital,education,housing,loan,contact,month,day_of_week,poutcome
-68,22,6,92.289,-31.0,5051.1,1,services,single,basic.4y,no,yes,cellular,sep,thu,failure
-31,44,1,94.534,-42.3,4980.4,0,entrepreneur,divorced,professional.course,yes,yes,telephone,apr,wed,nonexistent
-88,25,3,92.865,-44.1,5045.9,1,self-employed,married,basic.4y,no,no,telephone,aug,mon,success
-77,49,0,93.901,-37.8,5049.6,1,technician,single,basic.4y,yes,yes,cellular,may,thu,success
-37,27,3,93.001,-47.4,5156.6,1,retired,married,basic.6y,yes,no,cellular,jun,thu,nonexistent
-40,50,0,92.643,-40.3,5107.3,1,retired,divorced,basic.9y,yes,no,cellular,may,fri,success
-85,7,3,94.697,-38.8,5043.5,1,retired,married,high.school,no,no,cellular,aug,wed,success
-18,2,3,94.113,-42.4,5039.2,0,technician,divorced,basic.9y,no,yes,telephone,jul,fri,nonexistent
-54,2,1,93.098,-27.4,5086.1,0,retired,single,university.degree,no,no,telephone,oct,wed,success
-60,44,5,92.94,-46.0,5109.4,0,management,divorced,professional.course,no,no,telephone,jul,tue,failure
-96,39,3,92.777,-27.6,5077.1,0,technician,single,professional.course,yes,yes,cellular,jul,thu,failure
-35,33,0,94.582,-27.3,5164.2,1,blue-collar,single,professional.course,no,no,telephone,jul,mon,nonexistent
-55,44,1,93.695,-45.7,5171.9,1,retired,single,basic.4y,yes,yes,telephone,jul,thu,failure
-73,15,6,93.747,-39.6,5140.3,1,retired,single,basic.9y,yes,no,cellular,mar,mon,success
-27,49,5,93.204,-42.4,5201.3,1,entrepreneur,single,university.degree,no,no,cellular,jul,mon,success
-32,18,0,93.512,-40.7,5212.6,0,management,married,high.school,yes,no,telephone,jun,tue,failure
-97,55,4,92.681,-37.7,4984.4,0,entrepreneur,single,university.degree,yes,no,cellular,jul,tue,failure
-77,5,4,93.707,-49.0,5075.2,0,retired,single,basic.4y,no,no,telephone,may,thu,success
-26,40,4,93.31,-45.6,4969.5,0,retired,single,high.school,yes,no,cellular,jul,wed,failure
-86,54,4,92.756,-48.0,5186.2,1,retired,divorced,professional.course,yes,no,telephone,aug,mon,nonexistent
-"""
+#_____________________Single-Predict________________________________
 
 def input_feature_sidebar():
     age = st.sidebar.slider("Age", 17, 98, 35)
@@ -130,12 +75,6 @@ def input_feature_sidebar():
     # Susun ke dalam dataframe
     data = {
         'age': age,
-        'campaign': campaign,
-        'previous': previous,
-        'cons.price.idx': cons_price_idx,
-        'cons.conf.idx': cons_conf_idx,
-        'nr.employed': nr_employed,
-        'previous_contacted': previous_contacted,
         'job': job,
         'marital': marital,
         'education': education,
@@ -144,8 +83,14 @@ def input_feature_sidebar():
         'contact': contact,
         'month': month,
         'day_of_week': day_of_week,
-        'poutcome': poutcome
-    }
+        'campaign': campaign,
+        'previous': previous,
+        'poutcome': poutcome,
+        'cons.price.idx': cons_price_idx,
+        'cons.conf.idx': cons_conf_idx,
+        'nr.employed': nr_employed,
+        'previous_contacted': previous_contacted
+            }
 
     return pd.DataFrame([data])
 
@@ -156,55 +101,126 @@ st.sidebar.markdown(
         2. [Cindy Handoko Tantowibowo](https://www.linkedin.com/in/cindy-handoko-tantowibowo-55a2751a7/)
     """,unsafe_allow_html=True
 )
-st.sidebar.header("Batch Input Feature:")
+st.sidebar.header("Single Input Feature:")
 st.sidebar.write("")
+
+input_df = input_feature_sidebar()
+tab_single.dataframe(input_df)
+bt_single_predict = tab_single.button("Predict!")
+
+if bt_single_predict:
+    y_pred = model.predict(input_df)
+    if y_pred[0] == 1:
+        tab_single.subheader("**:green[Subscribed]**")
+        tab_single.markdown("""
+        Berdasarkan data yang dimasukkan, model memprediksi bahwa nasabah ini **berpotensi berlangganan produk deposito**. 
+        Hal ini menunjukkan adanya peluang konversi, sehingga tim pemasaran dapat menindaklanjuti dengan pendekatan yang tepat untuk memastikan keberhasilan.
+        """)
+    else:
+        tab_single.subheader("**Not Subscribed**")
+        tab_single.markdown("""
+        Berdasarkan data yang dimasukkan, model memprediksi bahwa nasabah ini **kemungkinan tidak berlangganan produk deposito**. 
+        Peluang konversi relatif rendah, sehingga upaya pemasaran dapat diprioritaskan pada segmen lain yang lebih potensial.
+        """)
+
+
+# csv_bytes = io.BytesIO(example_csv.encode('utf-8'))
+
+# st.sidebar.download_button(
+#     label="Download Example CSV",
+#     data=csv_bytes,
+#     file_name="example_data.csv",
+#     mime="text/csv",
+# )
+# upload_csv = st.sidebar.file_uploader("Upload your input CSV file", type=["csv"])
+# st.sidebar.write("")
+# if upload_csv is not None:
+#     input_df = pd.read_csv(upload_csv)
+
+# else:
+#     st.sidebar.header("Input Feature:")
+#     st.sidebar.write("")
+#     input_df = input_feature_sidebar()
+
+#_____________________Multi-Predict________________________________
+
+example_csv = """age,job,marital,education,housing,loan,contact,month,day_of_week,campaign,previous,poutcome,cons.price.idx,cons.conf.idx,nr.employed,previous_contacted
+35,technician,single,high.school,no,no,cellular,may,mon,2,0,success,93.5,-36.5,5020,1
+47,services,married,basic.9y,yes,no,cellular,jun,tue,4,1,nonexistent,93.8,-35.2,5040,1
+29,housemaid,single,basic.6y,no,no,cellular,jul,wed,1,0,success,93.2,-38.0,5005,1
+52,retired,married,university.degree,yes,no,cellular,aug,thu,3,2,success,94.0,-34.5,5010,1
+41,blue-collar,single,basic.9y,no,no,cellular,sep,fri,5,0,nonexistent,93.6,-36.8,5030,1
+38,admin.,divorced,professional.course,yes,no,cellular,oct,mon,6,0,success,93.9,-35.0,5025,1
+33,self-employed,single,basic.6y,no,no,cellular,nov,tue,2,0,nonexistent,93.4,-37.2,5000,1
+49,services,married,high.school,yes,yes,cellular,dec,wed,7,1,success,94.1,-33.8,5045,1
+36,technician,single,professional.course,no,no,cellular,may,thu,3,0,nonexistent,93.7,-36.0,5035,1
+42,housemaid,divorced,basic.4y,yes,no,cellular,jun,fri,4,0,success,93.3,-35.5,5015,1
+30,student,single,basic.4y,no,no,telephone,jul,mon,1,0,nonexistent,93.0,-37.5,5150,0
+55,retired,married,university.degree,yes,yes,telephone,aug,tue,6,1,failure,94.2,-29.8,5180,0
+37,blue-collar,single,basic.9y,yes,no,telephone,sep,wed,5,0,failure,93.6,-33.9,5125,0
+44,admin.,divorced,professional.course,no,no,telephone,oct,thu,3,0,nonexistent,94.0,-31.5,5140,0
+31,self-employed,single,basic.6y,yes,no,telephone,nov,fri,2,0,failure,93.2,-36.7,5160,0
+48,services,married,high.school,no,yes,telephone,dec,mon,4,0,nonexistent,93.9,-34.2,5135,0
+39,technician,single,professional.course,yes,no,telephone,may,tue,3,0,failure,94.1,-32.0,5175,0
+46,housemaid,divorced,basic.4y,no,no,telephone,jun,wed,5,0,nonexistent,93.5,-36.0,5150,0
+34,student,single,basic.4y,yes,no,telephone,jul,thu,1,0,failure,93.0,-38.5,5120,0
+51,retired,married,university.degree,yes,yes,telephone,aug,fri,6,1,nonexistent,94.0,-30.5,5185,0
+32,blue-collar,single,basic.9y,no,no,telephone,sep,mon,2,0,failure,93.6,-37.0,5145,0
+40,admin.,divorced,professional.course,yes,no,telephone,oct,tue,4,0,nonexistent,94.2,-33.0,5165,0
+36,self-employed,single,basic.6y,no,no,telephone,nov,wed,3,0,failure,93.7,-36.5,5130,0
+45,services,married,high.school,yes,yes,telephone,dec,thu,5,1,nonexistent,94.1,-32.5,5155,0
+38,technician,single,professional.course,no,no,telephone,may,fri,2,0,failure,93.4,-35.0,5170,0
+49,housemaid,divorced,basic.4y,yes,no,telephone,jun,mon,4,0,nonexistent,93.8,-33.5,5125,0
+27,student,single,basic.4y,no,no,cellular,jul,tue,1,0,success,93.1,-37.8,5010,1
+54,retired,married,university.degree,yes,yes,cellular,aug,wed,6,2,success,94.2,-34.0,5020,1
+35,blue-collar,single,basic.9y,no,no,cellular,sep,thu,3,0,nonexistent,93.5,-36.2,5035,1
+43,admin.,divorced,professional.course,yes,no,cellular,oct,fri,5,0,success,94.0,-35.5,5025,1
+31,self-employed,single,basic.6y,no,no,cellular,nov,mon,2,0,nonexistent,93.6,-37.0,5005,1
+50,services,married,high.school,yes,yes,cellular,dec,tue,4,1,success,94.1,-34.5,5015,1
+39,technician,single,professional.course,no,no,cellular,may,wed,3,0,nonexistent,93.7,-36.0,5020,1
+41,housemaid,divorced,basic.4y,yes,no,cellular,jun,thu,5,0,success,93.8,-35.2,5005,1
+28,student,single,basic.4y,no,no,cellular,jul,fri,1,0,nonexistent,93.2,-38.2,5010,1
+53,retired,married,university.degree,yes,yes,cellular,aug,mon,6,1,success,94.0,-33.0,5025,1
+37,blue-collar,single,basic.9y,no,no,cellular,sep,tue,3,0,nonexistent,93.5,-36.5,5030,1
+44,admin.,divorced,professional.course,yes,no,cellular,oct,wed,5,0,success,94.2,-34.5,5005,1
+33,self-employed,single,basic.6y,no,no,cellular,nov,thu,2,0,nonexistent,93.4,-37.5,5015,1
+48,services,married,high.school,yes,yes,cellular,dec,fri,4,1,success,94.1,-35.0,5020,1
+36,technician,single,professional.course,no,no,cellular,may,mon,3,0,nonexistent,93.6,-36.0,5000,1
+"""
 
 csv_bytes = io.BytesIO(example_csv.encode('utf-8'))
 
-st.sidebar.download_button(
-    label="Download Example CSV",
-    data=csv_bytes,
-    file_name="example_data.csv",
-    mime="text/csv",
-)
-upload_csv = st.sidebar.file_uploader("Upload your input CSV file", type=["csv"])
-st.sidebar.write("")
-if upload_csv is not None:
-    input_df = pd.read_csv(upload_csv)
+with tab_batch:
+    csv_bytes = io.BytesIO(example_csv.encode('utf-8'))
 
-else:
-    st.sidebar.header("Input Feature:")
-    st.sidebar.write("")
-    input_df = input_feature_sidebar()
+    st.download_button(
+        label="Download CSV Example",
+        data=csv_bytes,
+        file_name="example_input.csv",
+        mime="text/csv"
+    )
 
-#__________________________________________________________________ main bar __________________________________
+    csv_upload = st.file_uploader("Upload a CSV file :", type="csv")
+    if csv_upload:
 
+        upload_df = pd.read_csv(csv_upload)
+        y_preds = model.predict(upload_df)
+        y_preds_series = pd.Series(y_preds).map({1: "Subscribed ✅", 0: "Not Subscribed"})
 
-st.subheader("User Input Features: ")
-st.dataframe(input_df[:1])
+        teks = "{}% Complete"
+        bar = st.progress(0)
+        for i in range(100):
+            bar.progress(i +1 , text=teks.format(i+1))
+            time.sleep(0.01)
+        bar.empty()
+        
+        # Buat dua kolom
+        col1, col2 = st.columns(2)
+        with col1:
+            st.subheader("Input Features")
+            st.dataframe(upload_df)
 
-
-if os.path.exists(path_model):
-    model = pickle.load(open(path_model, "rb"))
-else:
-    st.error(f"Model file not found: {path_model}")
-
-model = pickle.load(open(path_model, "rb"))
-
-target_map =   {0:'Not Subscribed ❌', 
-                1:'Subscribed ✅'}
-
-predictions = model.predict(input_df)  # shape: (n_samples,)
-probas = model.predict_proba(input_df)  # shape: (n_samples, 2)
-
-# binner ke label
-predicted_labels = [target_map[pred] for pred in predictions]
-
-proba_df = pd.DataFrame(probas, columns=["Prediction Probability Not Subscribed", "Prediction Probability Subscribed"])
-proba_df["Prediction Result"] = predicted_labels
-
-
-st.subheader("Prediction Probability & Result :")
-st.dataframe(proba_df)
-
+        with col2:
+            st.subheader("Prediction Result")
+            st.dataframe(y_preds_series.rename("Prediction"))
 
