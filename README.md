@@ -141,10 +141,10 @@ Dashboard [Tableau Bank Marketing Campaign](https://public.tableau.com/app/profi
 [Aplikasi Bank Marketing Campaign Customer Predictor](https://finpro-bank-marketing.streamlit.app/) dikembangkan menggunakan Streamlit sebagai antarmuka interaktif untuk mendemonstrasikan hasil model machine learning dalam memprediksi minat nasabah terhadap produk deposito berjangka. Aplikasi ini memungkinkan pengguna untuk melakukan input data secara langsung melalui panel samping (*sidebar*) maupun melalui unggahan file CSV dalam jumlah banyak (*batch prediction*). Setelah data dimasukkan, aplikasi akan menampilkan hasil prediksi dalam bentuk yang mudah dipahami. 
 
 * Streamlit Pages
-![Overview Pages](report/streamlit_1.jpg)
+![Overview Pages](report/single.jpg)
 
 * Contoh *batch prediction*
-![Overview Pages](report/streamlit_2.jpg)
+![Overview Pages](report/batch.jpg)
 
 ## 11. Installation
 * Requirements: 
